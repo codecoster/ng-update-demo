@@ -1,5 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
 
 const MOCK_STATES = [
   {name: 'Alabama', abbreviation: 'AL'},
@@ -65,19 +71,29 @@ const MOCK_STATES = [
 
 @Component({
   selector: 'app-customer-input',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatCardModule,
+    ReactiveFormsModule
+  ],
   templateUrl: './customer-input.component.html',
   styleUrls: ['./customer-input.component.scss']
 })
 export class CustomerInputComponent {
-  addressForm = this.fb.group({
-    company: null,
-    firstName: [null, Validators.required],
-    lastName: [null, Validators.required],
-    address: [null, Validators.required],
-    address2: null,
-    city: [null, Validators.required],
-    state: [null, Validators.required],
-    postalCode: [null, Validators.compose([
+  addressForm = this.formBuilder.nonNullable.group({
+    company: '',
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required],
+    address: ['', Validators.required],
+    address2: '',
+    city: ['', Validators.required],
+    state: ['', Validators.required],
+    postalCode: ['', Validators.compose([
       Validators.required, Validators.minLength(5), Validators.maxLength(5)])
     ],
     shipping: ['free', Validators.required]
@@ -87,9 +103,11 @@ export class CustomerInputComponent {
 
   states = MOCK_STATES;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder) {
+  }
 
   onSubmit(): void {
+    this.addressForm.value.lastName
     alert('Thanks!');
   }
 }
